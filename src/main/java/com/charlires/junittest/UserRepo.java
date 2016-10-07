@@ -1,4 +1,4 @@
-package com.ooyala.junittest;
+package com.charlires.junittest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,7 @@ public class UserRepo {
         for (User u : users) {
             if (u.getId() == id) {
                 users.remove(u);
+                return;
             }
         }
     }

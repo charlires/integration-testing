@@ -1,4 +1,4 @@
-package com.ooyala.junittest;
+package com.charlires.junittest;
 
 import java.util.Random;
 
@@ -11,8 +11,8 @@ public class User {
     private String name;
     private String description;
 
-    public User(String name, String description) {
-        this.id = new Random().nextInt(100);
+    User(int id , String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
     }
