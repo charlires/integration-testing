@@ -30,16 +30,15 @@ public class DataProviderTest {
     public static Object[][] data() {
         return new Object[][]{
                 {1, 2, 3},
-                {1, 2, 3},
-                {1, 2, 3},
-                {1, 2, 3},
-                {1, 2, 3},
+                {2, 2, 4},
+                {3, 2, 5},
+                {4, 2, 6},
+                {5, 2, 7},
         };
     }
 
     @DataProvider(format = "/get - a: %p[0], expected: %p[1]")
     public static Object[][] dataRest() {
-        // input, expected
         return new Object[][]{
                 {"carlos", "carlos"},
                 {"jose", "jose"},
@@ -52,14 +51,8 @@ public class DataProviderTest {
     @BeforeClass
     public static void init()  {
         try {
-
             InputStream input = FileInputStream.class.getResourceAsStream("/env.properties");
-
-            // load a properties file
             prop.load(input);
-
-            // get the property value and print it out
-            System.out.println(prop.getProperty("host"));
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -75,16 +68,19 @@ public class DataProviderTest {
     @Test
     @UseDataProvider("dataRest")
     public void testGet(String name, String expected) throws JSONException, UnirestException {
-        HttpResponse<JsonNode> response = Unirest.get(prop.getProperty("host"))
-                .queryString("name", name).asJson();
+        HttpResponse<JsonNode> response = Unirest.get(prop.getProperty("host") + "/get")
+                .queryString("name", name)
+                .asJson();
         assertEquals(response.getBody().getObject().getJSONObject("args").getString("name"), expected);
     }
 
     @Test
     public void testGetRoot() throws JSONException, UnirestException {
-        HttpResponse<JsonNode> response = Unirest.get("http://httpbin.org/get").asJson();
-        assertEquals(response.getStatus(), 200);
-        assertThat("Response status code", response.getStatus(), is(200));
+        HttpResponse<JsonNode> response = Unirest.get(prop.getProperty("host") + "/status/{code}")
+                .routeParam("code", "300")
+                .asJson();
+        assertEquals(response.getStatus(), 300);
+        assertThat("Response status code", response.getStatus(), is(300));
     }
 
 }
